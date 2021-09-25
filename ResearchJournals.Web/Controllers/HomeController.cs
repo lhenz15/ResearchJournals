@@ -14,7 +14,6 @@ using ResearchJournals.Infrastructure.Data;
 
 namespace ResearchJournals.Web.Controllers
 {
-    [Authorize]
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
@@ -45,17 +44,6 @@ namespace ResearchJournals.Web.Controllers
                 .OrderByDescending(j => j.UpdatedAt);
             
             return View(await journals.ToListAsync());
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }

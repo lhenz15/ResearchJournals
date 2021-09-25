@@ -12,7 +12,6 @@ using ResearchJournals.Web.Models;
 
 namespace ResearchJournals.Web.Controllers
 {
-    [Authorize]
     public class JournalsController : BaseController
     {
 
@@ -48,6 +47,7 @@ namespace ResearchJournals.Web.Controllers
 
             if (content == null)
             {
+                // Add error message
                 return RedirectToAction(nameof(Index));
             }
 
