@@ -1,0 +1,35 @@
+@model IEnumerable<ResearcherItemViewModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+
+<ul>
+
+    @foreach (var researcher in Model)
+    {
+        <li>
+            
+            @researcher.UserName 
+            @if (!researcher.IsSubscribed)
+            {
+                <form asp-controller="Researchers" asp-action="Subscribe" method="post">
+                    <input name="researcherId" type="hidden" value="@researcher.Id"/>
+                    <button type="submit">Subscribe + </button>
+                </form>
+            }
+            else
+            {
+                <form asp-controller="Researchers" asp-action="Unsubscribe" method="post">
+                    <input name="researcherId" type="hidden" value="@researcher.Id"/>
+                    <button type="submit">Unsubscribe - </button>
+                </form>
+            }
+        </li>
+    }
+
+</ul>
+

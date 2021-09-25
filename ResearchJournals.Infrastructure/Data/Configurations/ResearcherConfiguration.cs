@@ -15,6 +15,14 @@ namespace ResearchJournals.Infrastructure.Data.Configurations
         {
             builder.HasMany(e => e.Journals)
                 .WithOne(e => e.Researcher);
+
+            builder.HasMany(e => e.Subscriptions)
+                .WithOne(e => e.Researcher)
+                .HasForeignKey(e => e.ResearcherId);
+
+            builder.HasMany(e => e.Subscriptors)
+                .WithOne(e => e.SubscribedTo)
+                .HasForeignKey(e => e.SubscribedToId);
         }
     }
 }

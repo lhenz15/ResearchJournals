@@ -1,0 +1,36 @@
+@model ResearchJournals.Domain.Models.Researcher
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>title</h2>
+
+<form asp-controller="Journals" asp-action="Index" method="post"
+            enctype="multipart/form-data">
+    <dl>
+        <dt>
+            <label>Titulo</label>
+        </dt>
+        <dd>
+            <input name="title" type="text" />
+        </dd>
+        <dt>
+            <label>Archivo</label>
+        </dt>
+        <dd>
+            <input name="file" type="file" />
+        </dd>
+    </dl>
+    <button type="submit">Upload</button>
+</form>
+
+mi malditose archivo 
+
+<ul>
+    @foreach (var journal in Model.Journals)
+    {
+        <li>@journal.Title</li>
+    }
+</ul>
