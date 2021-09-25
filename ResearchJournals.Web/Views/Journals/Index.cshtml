@@ -32,53 +32,57 @@
     </div>
 </div>
 
-<div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">My Journals</h6>
-    </div>
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table table-bordered" id="my-journals" width="100%" cellspacing="0">
-                <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>FileName</th>
-                    <th>Uploaded At</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var journal in Model.Journals)
-                {
+@if (Model?.Journals != null)
+{
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">My Journals</h6>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="my-journals" width="100%" cellspacing="0">
+                    <thead>
                     <tr>
-                        <td>@journal.Title</td>
-                        <td>@journal.FileName</td>
-                        <td>@journal.UploadedAt.ToString("MMMM dd, yyyy hh:mm:ss")</td>
-                        <td>
-                            <button type="button" class="btn btn-outline-primary btn-show-pdf" data-journal-id="@journal.Id">Show</button>
-                        </td>
+                        <th>Title</th>
+                        <th>FileName</th>
+                        <th>Uploaded At</th>
+                        <th></th>
                     </tr>
-                }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    @foreach (var journal in Model.Journals)
+                    {
+                        <tr>
+                            <td>@journal.Title</td>
+                            <td>@journal.FileName</td>
+                            <td>@journal.UploadedAt.ToString("MMMM dd, yyyy hh:mm:ss")</td>
+                            <td>
+                                <button type="button" class="btn btn-outline-primary btn-show-pdf" data-journal-id="@journal.Id">Show</button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+}
 
 @section Scripts {
-    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    @* <script src="~/vendor/datatables/jquery.dataTables.min.js"></script> *@
+    @* <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script> *@
+    <script src="~/lib/jquery-ui/jquery-1.11.1.min.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/lib/pdf/pdf.min.js"></script>
     <script src="~/lib/pdf/pdf.worker.js"></script>
     <script src="~/lib/pdf/easyPDF.js"></script>
     <script>
         $(function(){
-            $("#my-journals").DataTable();
+            // $("#my-journals").DataTable();
             
             function showPdf(journalId) {              
-                $.getJSON("/Journals/" + journalId, function (data) {
-                    console.log(data);
-                   // easyPDF(data.ContentBase64, "jQueryScript.Net")  ;  
+                $.getJSON("/Journals/GetJournal?id=" + journalId, function (data) {
+                    easyPDF(data.contentBase64, "Document")  ;  
                 });
             }
             

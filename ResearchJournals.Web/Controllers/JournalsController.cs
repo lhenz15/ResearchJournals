@@ -14,7 +14,6 @@ namespace ResearchJournals.Web.Controllers
 {
     public class JournalsController : BaseController
     {
-
         private const int MAX_FILE_SIZE = 2097152; // 2mb
         
         public JournalsController(ApplicationDbContext context, 
@@ -25,7 +24,6 @@ namespace ResearchJournals.Web.Controllers
         
         // GET 
         // List all my Journals
-        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var researcher = await _context.Users
@@ -35,8 +33,7 @@ namespace ResearchJournals.Web.Controllers
             return View(researcher);
         }
         
-        [HttpGet("{id}")]
-        public async Task<ActionResult<JournalItemViewModel>> GetJournal(Guid id)
+        public async Task<ActionResult<JournalItemViewModel>> GetJournal(Guid? id)
         {
             var journal = await _context.Journals.FirstOrDefaultAsync(j => j.Id == id);
             
@@ -56,7 +53,7 @@ namespace ResearchJournals.Web.Controllers
             return Json(result);
         }
 
-        [HttpPost("")]
+        [HttpPost]
         public async Task<IActionResult> Index(JournalUploadViewModel model)
         {
             var newJournal = new Journal

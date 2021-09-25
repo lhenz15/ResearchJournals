@@ -24,6 +24,8 @@
 }
 
 @section Scripts {
+    <script src="~/lib/jquery-ui/jquery-1.11.1.min.js"></script>
+    <script src="~/lib/jquery-ui/jquery-ui.min.js"></script>
     <script src="~/lib/pdf/pdf.min.js"></script>
     <script src="~/lib/pdf/pdf.worker.js"></script>
     <script src="~/lib/pdf/easyPDF.js"></script>
@@ -31,9 +33,8 @@
         $(function(){
             
             function showPdf(journalId) {              
-                $.getJSON("/Journals/" + journalId, function (data) {
-                    console.log(data);
-                   // easyPDF(data.ContentBase64, "jQueryScript.Net")  ;  
+                $.getJSON("/Journals/GetJournal?id=" + journalId, function (data) {
+                   easyPDF(data.contentBase64, "Document")  ;  
                 });
             }
             
