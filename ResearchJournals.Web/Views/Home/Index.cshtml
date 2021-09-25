@@ -1,16 +1,46 @@
 ﻿@model IEnumerable<JournalItemViewModel>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Journals";
 }
+
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">All Journals</h1>
+<p class="mb-4">
+    Here is the list of journals of your susbcriptions.
+</p>
 
 @foreach (var journal in Model)
 {
-    <p>@journal.Id</p>
-    <p>@journal.Title</p>
-    <p>@journal.FileName</p>
-    <p>@journal.Owner</p>
-    <p>@journal.UpdatedAt</p>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">@journal.Title by <b>@journal.Owner</b></h6>
+        </div>
+        <div class="card-body">
+            <p>Uploadted at @journal.UploadedAt.ToString("MMMM dd, yyyy hh:mm:ss")</p>
+            <button type="button" class="btn btn-outline-primary btn-show-pdf" data-journal-id="@journal.Id">Show</button>
+        </div>
+    </div>
+}
 
-    <hr/>
+@section Scripts {
+    <script src="~/lib/pdf/pdf.min.js"></script>
+    <script src="~/lib/pdf/pdf.worker.js"></script>
+    <script src="~/lib/pdf/easyPDF.js"></script>
+    <script>
+        $(function(){
+            
+            function showPdf(journalId) {              
+                $.getJSON("/Journals/" + journalId, function (data) {
+                    console.log(data);
+                   // easyPDF(data.ContentBase64, "jQueryScript.Net")  ;  
+                });
+            }
+            
+            $(".btn-show-pdf").click(function (e){
+                const data = $(this).data();
+                showPdf(data.journalId);
+            });     
+        });
+    </script>
 }

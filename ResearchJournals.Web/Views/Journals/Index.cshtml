@@ -1,36 +1,91 @@
 @model ResearchJournals.Domain.Models.Researcher
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "My Journals";
 }
 
-<h2>title</h2>
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">My Journals</h1>
+<p class="mb-4">
+    Upload your journals here.
+</p>
 
-<form asp-controller="Journals" asp-action="Index" method="post"
-            enctype="multipart/form-data">
-    <dl>
-        <dt>
-            <label>Titulo</label>
-        </dt>
-        <dd>
-            <input name="title" type="text" />
-        </dd>
-        <dt>
-            <label>Archivo</label>
-        </dt>
-        <dd>
-            <input name="file" type="file" />
-        </dd>
-    </dl>
-    <button type="submit">Upload</button>
-</form>
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">New Journal</h6>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Journals" 
+              asp-action="Index"
+              method="post"
+              enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Title</label>
+                <input class="form-control" name="title" />
+            </div>
+            <div class="form-group">
+                <label>Document</label>
+                <input type="file" class="form-control" name="file" />
+            </div>
+            <button type="submit" class="btn btn-primary">Upload!</button>
+        </form>
+    </div>
+</div>
 
-mi malditose archivo 
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">My Journals</h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="my-journals" width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>FileName</th>
+                    <th>Uploaded At</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var journal in Model.Journals)
+                {
+                    <tr>
+                        <td>@journal.Title</td>
+                        <td>@journal.FileName</td>
+                        <td>@journal.UploadedAt.ToString("MMMM dd, yyyy hh:mm:ss")</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-show-pdf" data-journal-id="@journal.Id">Show</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-<ul>
-    @foreach (var journal in Model.Journals)
-    {
-        <li>@journal.Title</li>
-    }
-</ul>
+@section Scripts {
+    <script src="~/vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="~/lib/pdf/pdf.min.js"></script>
+    <script src="~/lib/pdf/pdf.worker.js"></script>
+    <script src="~/lib/pdf/easyPDF.js"></script>
+    <script>
+        $(function(){
+            $("#my-journals").DataTable();
+            
+            function showPdf(journalId) {              
+                $.getJSON("/Journals/" + journalId, function (data) {
+                    console.log(data);
+                   // easyPDF(data.ContentBase64, "jQueryScript.Net")  ;  
+                });
+            }
+            
+            $(".btn-show-pdf").click(function (e){
+                const data = $(this).data();
+                showPdf(data.journalId);
+            });     
+        });
+    </script>
+}

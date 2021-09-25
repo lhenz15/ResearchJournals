@@ -39,9 +39,9 @@ namespace ResearchJournals.Web.Controllers
                     Title = j.Title,
                     FileName = j.FileName,
                     Owner = j.Researcher.UserName,
-                    UpdatedAt = j.UploadedAt
+                    UploadedAt = j.UploadedAt
                 })
-                .OrderByDescending(j => j.UpdatedAt);
+                .OrderByDescending(j => j.UploadedAt);
             
             return View(await journals.ToListAsync());
         }

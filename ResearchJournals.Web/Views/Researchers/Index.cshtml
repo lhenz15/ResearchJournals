@@ -1,35 +1,39 @@
 @model IEnumerable<ResearcherItemViewModel>
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "Researchers";
 }
 
-<h2>title</h2>
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Researchers</h1>
+<p class="mb-4">
+    Subscribe to your fellow researchers.
+</p>
 
-<ul>
+@foreach (var researcher in Model)
+{
 
-    @foreach (var researcher in Model)
-    {
-        <li>
-            
-            @researcher.UserName 
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">@researcher.UserName</h6>
+        </div>
+        <div class="card-body">
             @if (!researcher.IsSubscribed)
             {
                 <form asp-controller="Researchers" asp-action="Subscribe" method="post">
                     <input name="researcherId" type="hidden" value="@researcher.Id"/>
-                    <button type="submit">Subscribe + </button>
+                    <button type="submit" class="btn btn-primary">Subscribe + </button>
                 </form>
             }
             else
             {
                 <form asp-controller="Researchers" asp-action="Unsubscribe" method="post">
                     <input name="researcherId" type="hidden" value="@researcher.Id"/>
-                    <button type="submit">Unsubscribe - </button>
+                    <button type="submit" class="btn btn-danger">Unsubscribe - </button>
                 </form>
             }
-        </li>
-    }
+        </div>
+    </div>
+}
 
-</ul>
 

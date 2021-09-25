@@ -10,6 +10,6 @@ namespace ResearchJournals.Web.Models
         public byte[] Content { get; set; }
         public string ContentBase64 { get; set; }
         public string Owner { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime UploadedAt { get; set; }
     }
 }

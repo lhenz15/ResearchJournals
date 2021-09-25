@@ -15,6 +15,8 @@ namespace ResearchJournals.Web.Controllers
     public class JournalsController : BaseController
     {
 
+        private const int MAX_FILE_SIZE = 2097152; // 2mb
+        
         public JournalsController(ApplicationDbContext context, 
             UserManager<Researcher> userManager) : base(context, userManager)
         {
@@ -23,6 +25,7 @@ namespace ResearchJournals.Web.Controllers
         
         // GET 
         // List all my Journals
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             var researcher = await _context.Users
@@ -31,14 +34,35 @@ namespace ResearchJournals.Web.Controllers
 
             return View(researcher);
         }
+        
+        [HttpGet("{id}")]
+        public async Task<ActionResult<JournalItemViewModel>> GetJournal(Guid id)
+        {
+            var journal = await _context.Journals.FirstOrDefaultAsync(j => j.Id == id);
+            
+            if (journal == null)
+            {
+                return NotFound();
+            }
 
-        [HttpPost]
+            var result = new JournalItemViewModel();
+            
+            result.Id = journal.Id;
+            result.Title = journal.Title;
+            result.FileName = journal.FileName;
+            result.ContentBase64 = Convert.ToBase64String(journal.Content);
+            result.UploadedAt = journal.UploadedAt;
+            
+            return Json(result);
+        }
+
+        [HttpPost("")]
         public async Task<IActionResult> Index(JournalUploadViewModel model)
         {
             var newJournal = new Journal
             {
                 Title = model.Title,
-                FileName = model.File.Name,
+                FileName = model.File.FileName,
                 ResearcherId = CurrentUserId,
                 UploadedAt = DateTime.UtcNow
             };
@@ -56,7 +80,7 @@ namespace ResearchJournals.Web.Controllers
 
             await _context.SaveChangesAsync();
 
-            return View("UploadCompleted");
+            return RedirectToAction(nameof(Index));
         }
 
         private async Task<byte[]> GetFileContentByteArray(IFormFile formFile)
@@ -65,7 +89,7 @@ namespace ResearchJournals.Web.Controllers
             await formFile.CopyToAsync(memoryStream);
 
             // Upload the file if less than 2 MB
-            if (memoryStream.Length > 2097152)
+            if (memoryStream.Length > MAX_FILE_SIZE)
             {
                 ModelState.AddModelError("File", "The file is too large.");
                 return null;
